@@ -32,16 +32,15 @@ const pool = new Pool(
     }
   ])
   .then((res) =>{
+
+    console.log(res);
+    console.log(res.TODO);
+
     actionTODO(res.TODO);
 
-    console.log(`you choose to ${TODO}`);
+  function actionTODO (data) {
 
-  }
-  );
-
-  function actionTODO (name) {
-
-    console.log(`user have made a choice! A code is needed to act based on the user choice`);
+    console.log(`user have made a choice! It is ${data}. A code is needed to act based on the user choice`);
 
     // if (name === "view all departments") {
     //   pool.query('SELECT * FROM department', 
@@ -212,7 +211,8 @@ const pool = new Pool(
   
   };
 
-
+}
+);
 
 
   // pool.query(`INSERT INTO departments(name)values("Customer Support")`,(err,res)=>{
