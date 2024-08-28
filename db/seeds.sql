@@ -1,4 +1,4 @@
-INSERT INTO departments (name)
+INSERT INTO department (name)
 VALUES ('Workshop'), 
        ('Human Resources'),
        ('IT'),
@@ -36,7 +36,7 @@ VALUES ('operator', 2500, 1),
        -- rol_id 13
        ('Nurse', 5000, 7);
 
-INSERT INTO role (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ('Q', 'Q', 1, 3),
        ('W', 'W', 1, 3),
        ('E', 'E', 2, 3),
