@@ -29,6 +29,7 @@ a command-line application to manage a company's employee database, using Node.j
 
 ## Credits
 1. sorce of code: UofU bootcamp, module 12, activity 23 
+2. source of code: https://www.youtube.com/watch?v=yguFIUQPFO4&list=LL&index=1
 
 ## License
 ### All assets and code are under the MIT license. Please, check more info in lisence section of this repo.
