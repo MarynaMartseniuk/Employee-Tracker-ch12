@@ -81,7 +81,7 @@ function init() {
                 console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
               };
               console.log(`====================================`);
-
+               init();
               // // the code below displayes only Department Table by row-layout:
               // console.log(`/source: viewAllDep();/ DATA for All Departments:`)
               // console.log(rows);
@@ -126,9 +126,10 @@ function init() {
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all roles") {
-          pool.query('SELECT * FROM role', 
-          //pool.query('SELECT role.title AS Role Title, role.id AS Role ID, department.id AS Department, role.salary AS Salary FROM role JOIN department ON role.department_id = department.id',
+          //  pool.query('SELECT * FROM role', 
+          pool.query('SELECT role.title AS Role_Title, role.id AS Role_ID, department.name AS Department, role.salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id',
                       function (err, {rows}) {
+                        console.log(rows);
 
                         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                         // // maybe one of the way to get Dapartments names if do not use tables join:
@@ -144,7 +145,7 @@ function init() {
                         console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
                         console.log(`======================================================`);
                         for (let i = 0; i < rows.length; i++) {
-                          console.log(`|    ${rows[i].id}    |  ${rows[i].title}   |   ${rows[i].department_id}   |   ${rows[i].salary}   `);
+                          console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
                         };
                         console.log(`======================================================`);
 
@@ -198,27 +199,28 @@ function init() {
           // console.log(`These are departments you can choose among:`)
           // viewAllDep();
 
-          // // console.log(`Please, unswer folloing questions to add a new department:`);
-          // inquirer
-          // .prompt([
-          //   {
-          //     type: "input",
-          //     depName: "departmentName",
-          //     message: "What is the name of a new Department?",
-          //   }
-          // ])
-          // .then((res) => {
+          // console.log(`Please, unswer folloing questions to add a new department:`);
+          inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "departmentName",
+              message: "What is the name of a new Department?",
+            }
+          ])
+          .then((res) => {
 
-          //   console.log(`A new Department is ${res.departmentName}`);
+            console.log(`A new Department is ${res.departmentName}`);
 
-          //   // pool.query('INSERT INTO department(name)values(res.departmentName)', 
-          //   //             function (err, {rows}) {
-          //   //               console.log(rows);
-          //   //               //pool.end();
-          //   //             }
-          //   // );
+            pool.query('INSERT INTO department (name) values($1)', [res.departmentName], 
+                        function (err, {rows}) {
+                          console.log(rows);
+                          //pool.end();
+                          init();
+                        }
+            );
           
-          // });
+          });
 
         };
 
@@ -230,47 +232,47 @@ function init() {
 
           // 1. TODO display Department Names to add them to promt below:
 
-          // // 2. get user input (user data) about a new role:
-          // inquirer
-          // .prompt([
-          //   {
-          //     type: "input",
-          //     rTitle: "roleTitle",
-          //     message: "What is the title of a role?",
-          //   },
-          //   {
-          //     type: "input",
-          //     rSalary: "roleSalary",
-          //     message: "What is the salary for the role?",
-          //   },
-          //   {
-          //     type: 'list',
-          //     rDep: 'roleDepartment',
-          //     message: 'Chose the Department you would like to assign this role to:',
-          //     choices: ['Workshop', 'Human Resources', 'IT', 'Office', 'Security', 'Medical'],
-          //     // filter(val) {
-          //     //   return val.toLowerCase();
-          //     // },
-          //   }
-          // ])
-          // .then((res) =>{
+          // 2. get user input (user data) about a new role:
+          inquirer
+          .prompt([
+            {
+              type: "input",
+              rTitle: "roleTitle",
+              message: "What is the title of a role?",
+            },
+            {
+              type: "input",
+              rSalary: "roleSalary",
+              message: "What is the salary for the role?",
+            },
+            {
+              type: 'list',
+              rDep: 'roleDepartment',
+              message: 'Chose the Department you would like to assign this role to:',
+              choices: ['Workshop', 'Human Resources', 'IT', 'Office', 'Security', 'Medical'],
+              // filter(val) {
+              //   return val.toLowerCase();
+              // },
+            }
+          ])
+          .then((res) =>{
 
-          //   console.log(`A new Role is ${res.roleTitle}`);
-          //   console.log(`A new Role Salary is ${res.roleTitle}`);
-          //   console.log(`A new Role Department is ${res.roleDepartment}`);
+            console.log(`A new Role is ${res.roleTitle}`);
+            console.log(`A new Role Salary is ${res.roleTitle}`);
+            console.log(`A new Role Department is ${res.roleDepartment}`);
 
-          //   // get a department_id based on res.roleDepartment:
-          //   roleDepartment_id = 
+            // get a department_id based on res.roleDepartment:
+            roleDepartment_id = 
           
-          //   // add a new role to the role-table to our db:
-          //   pool.query('INSERT INTO role(title, salary, department_id)values(res.roleTitle, res.roleSalary, roleDepartment_id)', 
-          //               function (err, {rows}) {
-          //                 console.log(rows);
-          //                 pool.end();
-          //               }
-          //   );
+            // add a new role to the role-table to our db:
+            pool.query('INSERT INTO role(title, salary, department_id)values(res.roleTitle, res.roleSalary, roleDepartment_id)', 
+                        function (err, {rows}) {
+                          console.log(rows);
+                          pool.end();
+                        }
+            );
           
-          // });
+          });
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
@@ -367,7 +369,7 @@ function init() {
 
   // //=============================================
   // // ask user if he/she would like to do anything else
-  // initNext()          
+  //initNext()          
         
 // end of function init();
 };
