@@ -36,7 +36,7 @@ function init() {
         type: "list",
         message: "Choose what you would like to do:",
         name: "TODO",
-        choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "Quit"],
+        choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "Quit the App"],
       }
     ])
     .then((res) => {
@@ -81,7 +81,7 @@ function init() {
                 console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
               };
               console.log(`====================================`);
-               init();
+              init();
               // // the code below displayes only Department Table by row-layout:
               // console.log(`/source: viewAllDep();/ DATA for All Departments:`)
               // console.log(rows);
@@ -129,7 +129,7 @@ function init() {
           //  pool.query('SELECT * FROM role', 
           pool.query('SELECT role.title AS Role_Title, role.id AS Role_ID, department.name AS Department, role.salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id',
                       function (err, {rows}) {
-                        console.log(rows);
+                        console.table(rows);
 
                         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                         // // maybe one of the way to get Dapartments names if do not use tables join:
@@ -139,15 +139,15 @@ function init() {
                         
                         // TODO Consolelog join of Role&Department Tables by table-layout:
                         // TODO table size needs adjustments
-                        console.log(`======================================================`);
-                        console.log(`|                   All Role data:                   |`);
-                        console.log(`======================================================`);
-                        console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
-                        console.log(`======================================================`);
-                        for (let i = 0; i < rows.length; i++) {
-                          console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
-                        };
-                        console.log(`======================================================`);
+                        // console.log(`======================================================`);
+                        // console.log(`|                   All Role data:                   |`);
+                        // console.log(`======================================================`);
+                        // console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
+                        // console.log(`======================================================`);
+                        // for (let i = 0; i < rows.length; i++) {
+                        //   console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
+                        // };
+                        // console.log(`======================================================`);
 
 
                         console.log(`This table data format is under developing now. Names of Department instead of Department ID is coming soon.`);
@@ -360,6 +360,8 @@ function init() {
 
           console.log(`code for "Quit" is comming soon. It is under developing now.`);
           console.log(`To "Quit" of App now click 'ctrl+C' for GitBush.`);
+          process.exit();
+
         };
 
         return;
@@ -367,31 +369,8 @@ function init() {
 
     });
 
-  // //=============================================
-  // // ask user if he/she would like to do anything else
-  //initNext()          
-        
+       
 // end of function init();
-};
-
-// function to handle next user request
-function initNext() {
-  inquirer.prompt([
-    {
-      type: "list",
-      message: "would you like to do anything else?",
-      name: "keepWork",
-      choices: ["yes", "no"],
-    }
-  ])
-  .then((res) =>{
-    if (res.keepWork === "yes") {
-      init();
-    } else {
-      return console.log('you have chosen to STOP App');
-      // TODO function to stop App
-    }
-  });
 };
 
 init();
