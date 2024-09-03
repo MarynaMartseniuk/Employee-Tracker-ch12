@@ -22,12 +22,22 @@ const pool = new Pool(
 //connect to db
 pool.connect();
 
-// TODO write "Employee Manager" using special symbols: |_-/\ etc. (issue #19)
-console.log(`.---------------------.`);
-console.log(`|                     |`);
-console.log(`|  Employee Manager   |`);
-console.log(`|                     |`);
-console.log(`.---------------------.`);
+console.log(`.-----------------------------------------------------.`);
+console.log(`|    _____                 _                          |`);
+console.log(`|   | ____|_ __ ___  _ __ | | ___  _   _  ___  ___    |`);
+console.log(`|   |  _| | '_ ' _  | '_  | |/ _  | | | |/ _  / _     |`);
+console.log(`|   | |___| | | | | | |_) | | (_) | |_| |  __/  __/   |`);
+console.log(`|   |_____|_| |_| |_| .__/|_| ___/  ___,| ___| ___|   |`);
+console.log(`|                   |_|            |___/              |`);
+console.log(`|    __  __                                           |`);
+console.log(`|   |   /  | __ _ _ __   __ _  __ _  ___ _ __         |`);
+console.log(`|   | | /| |/ _' | '_   / _' |/ _' |/ _   '__|        |`);
+console.log(`|   | |  | | (_| | | | | (_| | (_| |  __/ |           |`);
+console.log(`|   |_|  |_| __,_|_| |_| __,_| ___,| ___|_|           |`);
+console.log(`|                             |___/                   |`);
+console.log(`.-----------------------------------------------------.`);
+
+
 function init() {
 
   inquirer
@@ -80,43 +90,20 @@ function init() {
         };
         //+++++++++++++++++++++++++++++++++++++++++
 
-        //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-        //WWWWW handle user request part:  WWWW
-        //WwWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+        //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all departments") {
-
-        // pool.query('SELECT * FROM department', 
-        //           function (err, {rows}) {
-        //             // TODO table size needs adjustments
-        //             console.log(`====================================`);
-        //             console.log(`|       All Departments data:      |`);
-        //             console.log(`====================================`);
-        //             console.log(`| Department id |  Depatment Name  |`);
-        //             console.log(`====================================`);
-        //             for (let i = 0; i < rows.length; i++) {
-        //               console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
-        //             };
-        //             console.log(`====================================`);
-
-        //             // // the code below displayes only Department Table by row-layout:
-        //             // console.log(rows);
-        //             // console.log(rows[0].name);
-        //             // pool.end();
-        //           }
-        // );
 
         // viewAllDep(); 
 
-        pool.query('SELECT * FROM department', 
+        //pool.query('SELECT * FROM department',
+        pool.query('SELECT department.name AS Department_name, department.id AS Department_ID FROM department', 
           function (err, {rows}) {
 
-            // console.log(`|  Department id  |  Depatment Name  |`);
-            // console.log(`|  ${rows[i].id}  |  ${rows[i].name} | `);
+            // console.log(`${rows[i].id}`);
 
             console.table(rows);
             init();
           });
-
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
@@ -125,12 +112,6 @@ function init() {
             function (err, {rows}) {
               console.table(rows);
               init();
-
-              //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-              // // maybe one of the way to get Dapartments names if do not use tables join:
-              // depNameArray = depName();
-              // console.log(`depNameArray has gotren data: ${depNameArray}`);
-              //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
               
               // TODO Consolelog join of Role&Department Tables by table-layout:
               // TODO table size needs adjustments
@@ -143,7 +124,6 @@ function init() {
               //   console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
               // };
               // console.log(`======================================================`);
-
             });
         };
 
@@ -177,7 +157,7 @@ function init() {
           );
         };
 
-        // //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+        //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add a department") {
 
           console.log(`code for "add a department" is comming soon. It is under developing now.`);
@@ -343,7 +323,8 @@ function init() {
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWW
-        if (data === "Quit") {
+        if (data === "Quit the App") {
+          console.log(`Have a good rest of your day!`)
           process.exit();
         };
 
