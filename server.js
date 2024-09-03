@@ -53,42 +53,30 @@ function init() {
         //+++++++++++++++++++++++++++++++++++++
         //++++++  Modularization part: ++++++++
         //+++++++++++++++++++++++++++++++++++++
-        // Get Department Name by ID
-        function depName() {
-          let depNameData = [];
-          pool.query('SELECT * FROM department', 
-            function (err, {rows}) {
-                for (let i = 0; i < rows.length; i++) {
-                depNameData = depNameData.push(rows[i].name);
-                
-              };
-          });
-          console.log(`dep array is ${depNameData}`);
-          return depNameData;
-        };
+
         //+++++++++++++++++++++++++++++++++++++++++
         //view all departments
         function viewAllDep() {
-          pool.query('SELECT * FROM department', 
-            function (err, {rows}) {
-              // TODO table size needs adjustments
-              console.log(`====================================`);
-              console.log(`|       All Departments data:      |`);
-              console.log(`====================================`);
-              console.log(`| Department id |  Depatment Name  |`);
-              console.log(`====================================`);
-              for (let i = 0; i < rows.length; i++) {
-                console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
-              };
-              console.log(`====================================`);
-              init();
-              // // the code below displayes only Department Table by row-layout:
-              // console.log(`/source: viewAllDep();/ DATA for All Departments:`)
-              // console.log(rows);
-              // console.log(rows[0].name);
-              const dep = rows;
-              return dep;
-            });
+          // pool.query('SELECT * FROM department', 
+          //   function (err, {rows}) {
+          //     // TODO table size needs adjustments
+          //     console.log(`====================================`);
+          //     console.log(`|       All Departments data:      |`);
+          //     console.log(`====================================`);
+          //     console.log(`| Department id |  Depatment Name  |`);
+          //     console.log(`====================================`);
+          //     for (let i = 0; i < rows.length; i++) {
+          //       console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
+          //     };
+          //     console.log(`====================================`);
+          //     init();
+          //     // // the code below displayes only Department Table by row-layout:
+          //     // console.log(`/source: viewAllDep();/ DATA for All Departments:`)
+          //     // console.log(rows);
+          //     // console.log(rows[0].name);
+          //     const dep = rows;
+          //     return dep;
+          //   });
         };
         //+++++++++++++++++++++++++++++++++++++++++
 
@@ -117,47 +105,46 @@ function init() {
         //           }
         // );
 
-        viewAllDep(); 
+        // viewAllDep(); 
 
-          // TODO get reqDep, now it is udefined
-          // console.log(reqDep);
-          console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
+        pool.query('SELECT * FROM department', 
+          function (err, {rows}) {
+
+            // console.log(`|  Department id  |  Depatment Name  |`);
+            // console.log(`|  ${rows[i].id}  |  ${rows[i].name} | `);
+
+            console.table(rows);
+            init();
+          });
+
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all roles") {
-          //  pool.query('SELECT * FROM role', 
           pool.query('SELECT role.title AS Role_Title, role.id AS Role_ID, department.name AS Department, role.salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id',
-                      function (err, {rows}) {
-                        console.table(rows);
+            function (err, {rows}) {
+              console.table(rows);
+              init();
 
-                        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                        // // maybe one of the way to get Dapartments names if do not use tables join:
-                        // depNameArray = depName();
-                        // console.log(`depNameArray has gotren data: ${depNameArray}`);
-                        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                        
-                        // TODO Consolelog join of Role&Department Tables by table-layout:
-                        // TODO table size needs adjustments
-                        // console.log(`======================================================`);
-                        // console.log(`|                   All Role data:                   |`);
-                        // console.log(`======================================================`);
-                        // console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
-                        // console.log(`======================================================`);
-                        // for (let i = 0; i < rows.length; i++) {
-                        //   console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
-                        // };
-                        // console.log(`======================================================`);
+              //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+              // // maybe one of the way to get Dapartments names if do not use tables join:
+              // depNameArray = depName();
+              // console.log(`depNameArray has gotren data: ${depNameArray}`);
+              //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+              
+              // TODO Consolelog join of Role&Department Tables by table-layout:
+              // TODO table size needs adjustments
+              // console.log(`======================================================`);
+              // console.log(`|                   All Role data:                   |`);
+              // console.log(`======================================================`);
+              // console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
+              // console.log(`======================================================`);
+              // for (let i = 0; i < rows.length; i++) {
+              //   console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
+              // };
+              // console.log(`======================================================`);
 
-
-                        console.log(`This table data format is under developing now. Names of Department instead of Department ID is coming soon.`);
-                        console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
-
-                        // the code below displayes only Role Table by row-layout:
-                        //console.log(rows);
-                      }
-          );
-
+            });
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
@@ -357,19 +344,14 @@ function init() {
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "Quit") {
-
-          console.log(`code for "Quit" is comming soon. It is under developing now.`);
-          console.log(`To "Quit" of App now click 'ctrl+C' for GitBush.`);
           process.exit();
-
         };
 
-        return;
+      // end of function TODO();    
       };
 
     });
 
-       
 // end of function init();
 };
 
