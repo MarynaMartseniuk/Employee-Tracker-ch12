@@ -7,18 +7,18 @@ const { Pool } = require('pg');
 
 // Connect to database
 const pool = new Pool(
-    {
-      //PostgreSQL username
-      user: 'postgres',
-      //PostgreSQL password
-      password: '6062086@Ua00',
-      host: 'localhost',
-      database: 'emptr_db',
-      port: 5432
+  {
+    //PostgreSQL username
+    user: 'postgres',
+    //PostgreSQL password
+    password: '6062086@Ua00',
+    host: 'localhost',
+    database: 'emptr_db',
+    port: 5432
   },
   console.log('Connected to the emptr_db database!')
 );
-  
+
 //connect to db
 pool.connect();
 
@@ -39,7 +39,7 @@ console.log(`.-----------------------------------------------------.`);
 
 
 function init() {
-
+  console.log('====================================================')
   inquirer
     .prompt([
       {
@@ -56,263 +56,274 @@ function init() {
 
       actionTODO(res.TODO);
 
-      function actionTODO (data) {
+      function actionTODO(data) {
 
         // console.log(`you have chosen to ${data}. `);
-        
-        //+++++++++++++++++++++++++++++++++++++
-        //++++++  Modularization part: ++++++++
-        //+++++++++++++++++++++++++++++++++++++
 
         //+++++++++++++++++++++++++++++++++++++++++
         //view all departments
         function viewAllDep() {
-          // pool.query('SELECT * FROM department', 
-          //   function (err, {rows}) {
-          //     // TODO table size needs adjustments
-          //     console.log(`====================================`);
-          //     console.log(`|       All Departments data:      |`);
-          //     console.log(`====================================`);
-          //     console.log(`| Department id |  Depatment Name  |`);
-          //     console.log(`====================================`);
-          //     for (let i = 0; i < rows.length; i++) {
-          //       console.log(`|       ${rows[i].id}       |  ${rows[i].name}   `);
-          //     };
-          //     console.log(`====================================`);
-          //     init();
-          //     // // the code below displayes only Department Table by row-layout:
-          //     // console.log(`/source: viewAllDep();/ DATA for All Departments:`)
-          //     // console.log(rows);
-          //     // console.log(rows[0].name);
-          //     const dep = rows;
-          //     return dep;
-          //   });
+          pool.query('SELECT department.name AS Department_name, department.id AS Department_ID FROM department',
+            function (err, { rows }) {
+
+              // console.log(`${rows[i].id}`);
+
+              console.log(`Information about ALL DEPARTMENTS:`);
+              console.table(rows);
+
+              // set to execute init() with 0.5sec later after updated ALL DEPARTMENTS table has been displayed.
+              setTimeout(() => {
+                init();
+              }, 500);
+            });
+
         };
         //+++++++++++++++++++++++++++++++++++++++++
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all departments") {
 
-        // viewAllDep(); 
+          viewAllDep();
 
-        //pool.query('SELECT * FROM department',
-        pool.query('SELECT department.name AS Department_name, department.id AS Department_ID FROM department', 
-          function (err, {rows}) {
+          // pool.query('CREATE VIEW [All Departments] SELECT department.name AS Department_name, department.id AS Department_ID FROM department', 
+          //   //function (err, {rows}) {
+          //   function (err, data) {
 
-            // console.log(`${rows[i].id}`);
+          //     // console.log(`${rows[i].id}`);
 
-            console.table(rows);
-            init();
-          });
+          //     // console.log(`Information about ALL DEPARTMENTS:`);
+          //     // console.table(rows);
+
+          //     // set to execute init() with 0.5sec later after updated ALL DEPARTMENTS table has been displayed.
+          //     setTimeout(() => {
+          //       init();
+          //     }
+          //     , 500);
+          //   });   
+
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all roles") {
-          pool.query('SELECT role.title AS Role_Title, role.id AS Role_ID, department.name AS Department, role.salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id',
-            function (err, {rows}) {
+          pool.query('SELECT role.title AS Job_Title, role.id AS Role_ID, department.name AS Department, role.salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id',
+            function (err, { rows }) {
+
+              //console.log(rows);
+              console.log(`Information about ALL ROLES:`);
               console.table(rows);
               init();
-              
-              // TODO Consolelog join of Role&Department Tables by table-layout:
-              // TODO table size needs adjustments
-              // console.log(`======================================================`);
-              // console.log(`|                   All Role data:                   |`);
-              // console.log(`======================================================`);
-              // console.log(`| Role ID |  Job Title   |   Department  |   Salary   |`);
-              // console.log(`======================================================`);
-              // for (let i = 0; i < rows.length; i++) {
-              //   console.log(`|    ${rows[i].role_id}    |  ${rows[i].role_title}   |   ${rows[i].department}   |   ${rows[i].salary}   `);
-              // };
-              // console.log(`======================================================`);
-            });
+
+            }
+          );
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all employees") {
 
-          pool.query('SELECT * FROM employee', 
-                      function (err, {rows}) {
-
-                        // TODO get Role&Employee&Department Tables join (req-data).
-
-                        // TODO display join of Role&Employee&Department Tables by table-layout:
-
-                        // TODO table size needs adjustments
-                        console.log(`===================================================================================`);
-                        console.log(`|                                  All Employee data:                              |`);
-                        console.log(`===================================================================================`);
-                        console.log(`| Employee ID | First Name | Last Name | Job Title | Department | Salary | Manager |`);
-                        console.log(`===================================================================================`);
-
-                        // TODON use a 'for loop' throught req-data to display it. If manager_id is NULL, then display 'N/A' in Manager column.
-                    
-
-                        // the code below displayes only Role Table by row-layout:
-                        console.log(rows);
-
-                        console.log(`This data format is under developing now to be able be inserted in a table above. Names of Department/Role instead of DepartmentID/RoleID is coming soon.`);
-                        console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
-
-                      }
+          //pool.query('SELECT * FROM employee',
+          pool.query('SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Jobe_Title, department.name AS Department, role.salary AS Salary, employee.manager_id AS Manager_ID FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id',
+            function (err, { rows }) {
+              console.log(`Information about ALL EMPLOYEES:`);
+              console.table(rows);
+              init();
+            }
           );
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add a department") {
 
-          console.log(`code for "add a department" is comming soon. It is under developing now.`);
-          console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
-
-          // console.log(`These are departments you can choose among:`)
-          // viewAllDep();
-
-          // console.log(`Please, unswer folloing questions to add a new department:`);
+          console.log(`Please, unswer folloing questions to add a new department:`);
           inquirer
-          .prompt([
-            {
-              type: "input",
-              name: "departmentName",
-              message: "What is the name of a new Department?",
-            }
-          ])
-          .then((res) => {
-
-            console.log(`A new Department is ${res.departmentName}`);
-
-            pool.query('INSERT INTO department (name) values($1)', [res.departmentName], 
-                        function (err, {rows}) {
-                          console.log(rows);
-                          //pool.end();
-                          init();
-                        }
-            );
-          
-          });
+            .prompt([
+              {
+                type: "input",
+                name: "departmentName",
+                message: "What is the name of a new Department?",
+              }
+            ])
+            .then((res) => {
+              console.log(`A new Department is => ${res.departmentName}`);
+              pool.query('INSERT INTO department (name) VALUES ($1)', [res.departmentName],
+                function (err, { rows }) {
+                  viewAllDep();
+                  console.log('HI!');
+                }
+              );
+            });
 
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add a role") {
 
-          console.log(`code for "add a role" is comming soon. It is under developing now.`);
-          console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
+          // console.log(`code for "add a role" is comming soon. It is under developing now.`);
 
-          // 1. TODO display Department Names to add them to promt below:
+          var options = 0;
 
-          // 2. get user input (user data) about a new role:
-          inquirer
-          .prompt([
-            {
-              type: "input",
-              rTitle: "roleTitle",
-              message: "What is the title of a role?",
-            },
-            {
-              type: "input",
-              rSalary: "roleSalary",
-              message: "What is the salary for the role?",
-            },
-            {
-              type: 'list',
-              rDep: 'roleDepartment',
-              message: 'Chose the Department you would like to assign this role to:',
-              choices: ['Workshop', 'Human Resources', 'IT', 'Office', 'Security', 'Medical'],
-              // filter(val) {
-              //   return val.toLowerCase();
-              // },
-            }
-          ])
-          .then((res) =>{
+          pool.query('SELECT department.name AS Department_name, department.id AS Department_ID FROM department',
+            function (err, { rows }) {
 
-            console.log(`A new Role is ${res.roleTitle}`);
-            console.log(`A new Role Salary is ${res.roleTitle}`);
-            console.log(`A new Role Department is ${res.roleDepartment}`);
+              // console.log(`${rows[i].id}`);
 
-            // get a department_id based on res.roleDepartment:
-            roleDepartment_id = 
-          
-            // add a new role to the role-table to our db:
-            pool.query('INSERT INTO role(title, salary, department_id)values(res.roleTitle, res.roleSalary, roleDepartment_id)', 
-                        function (err, {rows}) {
-                          console.log(rows);
-                          pool.end();
-                        }
-            );
-          
-          });
+              console.log(`Information about ALL DEPARTMENTS:`);
+              console.table(rows);
+
+              options = rows;
+              console.log(options);
+              inquirer
+                .prompt([
+                  {
+                    type: "input",
+                    name: "roleTitle",
+                    message: "What is the title of a role?",
+                  },
+                  {
+                    type: "input",
+                    name: "roleSalary",
+                    message: "What is the salary for the role?",
+                  },
+
+                  {
+                    type: 'list',
+                    name: 'roleDepartment',
+                    message: 'What is the department name?',
+                    choices: options.map(({department_name}) => department_name),
+                    // filter(val) {
+                    //   return val.toLowerCase();
+                    // },
+                  }
+                ])
+                .then((res) => {
+
+                  console.log(`A new Role is ${res.roleTitle}`);
+                  console.log(`A new Role Salary is ${res.roleSalary}`);
+                  console.log(`A new Role Department is ${res.roleDepartment}`);
+                  const id = options.filter(({department_name}) => department_name === res.roleDepartment).department_id;
+                  // add a new role to the role-table to our db:
+                  pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [res.roleTitle, res.roleSalary, id],
+                    //function (err, {rows}) {
+                    function (err, data) {
+                      //console.table(rows);
+                      console.log('A new role has been added! Check "view all roles!"');
+                      init();
+                    }
+                  );
+
+                });
+            });
+
+          // inquirer
+          // .prompt([
+          //   {
+          //     type: "input",
+          //     name: "roleTitle",
+          //     message: "What is the title of a role?",
+          //   },
+          //   {
+          //     type: "input",
+          //     name: "roleSalary",
+          //     message: "What is the salary for the role?",
+          //   },
+
+          //   {
+          //     type: 'list',
+          //     name: 'roleDepartment',
+          //     message: 'What is the department name?',
+          //     choices: [],
+          //     // filter(val) {
+          //     //   return val.toLowerCase();
+          //     // },
+          //   }
+          // ])
+          // .then((res) =>{
+
+          //   console.log(`A new Role is ${res.roleTitle}`);
+          //   console.log(`A new Role Salary is ${res.roleSalary}`);
+          //   console.log(`A new Role Department is ${res.roleDepartment}`);
+
+          //   // add a new role to the role-table to our db:
+          //   pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)',  [res.roleTitle, res.roleSalary, res.roleDepartment_id], 
+          //               //function (err, {rows}) {
+          //               function (err, data) {
+          //                 //console.table(rows);
+          //                 console.log('A new role has been added! Check "view all roles!"');
+          //                 init();
+          //               }
+          //   );
+
+          // });
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add an employee") {
 
           console.log(`code for "add a employee" is comming soon. It is under developing now.`);
-          console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
 
-        //   // 1. TODO display Role Titles so user can choose one:
+          //   // 1. TODO display Role Titles so user can choose one:
 
-        //   // 2. TODO display Manager first&last names  so user can choose one:
+          //   // 2. TODO display Manager first&last names  so user can choose one:
 
-        //   // 3. get user input (user data) about a new employee:
-        //   inquirer
-        //   .prompt([
-        //     {
-        //       type: "input",
-        //       eFirstName: "employeeFirstName",
-        //       message: "What is the First Name of a new employee?",
-        //     },
-        //     {
-        //       type: "input",
-        //       eLastName: "employeeLastName",
-        //       message: "What is the Last Name of a new employee?",
-        //     },
-        //     {
-        //       type: 'list',
-        //       eRole: 'employeeRole',
-        //       message: 'Choose the Role for a new employee:',
-        //       choices: ['operator', 'mechanic', 'Line Lead', 'Coach', 'HR Officer', 'IT Specialist', 'Cafeteria Officer', 'Chief', 'Office Manager', 'Senior Office Manager', 'Security Officer', 'Senior Security Officer', 'Nurse'],
-        //       // filter(val) {
-        //       //   return val.toLowerCase();
-        //       // },
-        //     },
-        //     {
-        //       type: 'list',
-        //       eManager: 'employeeManager',
-        //       message: 'Choose a manager for a new employee:',
-        //       choices: ['Line Lead', 'Coach', 'Chief', 'Senior Office Manager', 'Senior Security Officer', 'None'],
-        //       // filter(val) {
-        //       //   return val.toLowerCase();
-        //       // },
-        //     }
-        //   ])
-        //   .then((res) =>{
+          //   // 3. get user input (user data) about a new employee:
+          //   inquirer
+          //   .prompt([
+          //     {
+          //       type: "input",
+          //       eFirstName: "employeeFirstName",
+          //       message: "What is the First Name of a new employee?",
+          //     },
+          //     {
+          //       type: "input",
+          //       eLastName: "employeeLastName",
+          //       message: "What is the Last Name of a new employee?",
+          //     },
+          //     {
+          //       type: 'list',
+          //       eRole: 'employeeRole',
+          //       message: 'Choose the Role for a new employee:',
+          //       choices: ['operator', 'mechanic', 'Line Lead', 'Coach', 'HR Officer', 'IT Specialist', 'Cafeteria Officer', 'Chief', 'Office Manager', 'Senior Office Manager', 'Security Officer', 'Senior Security Officer', 'Nurse'],
+          //       // filter(val) {
+          //       //   return val.toLowerCase();
+          //       // },
+          //     },
+          //     {
+          //       type: 'list',
+          //       eManager: 'employeeManager',
+          //       message: 'Choose a manager for a new employee:',
+          //       choices: ['Line Lead', 'Coach', 'Chief', 'Senior Office Manager', 'Senior Security Officer', 'None'],
+          //       // filter(val) {
+          //       //   return val.toLowerCase();
+          //       // },
+          //     }
+          //   ])
+          //   .then((res) =>{
 
-        //     // console.log(`A new Role is ${res.roleTitle}`);
-        //     // console.log(`A new Role Salary is ${res.roleTitle}`);
-        //     // console.log(`A new Role Department is ${res.roleDepartment}`);
+          //     // console.log(`A new Role is ${res.roleTitle}`);
+          //     // console.log(`A new Role Salary is ${res.roleTitle}`);
+          //     // console.log(`A new Role Department is ${res.roleDepartment}`);
 
-        //     // TODO get a role_id based on res.employeeRole:
-        //     employeeRole_id = 1;
+          //     // TODO get a role_id based on res.employeeRole:
+          //     employeeRole_id = 1;
 
-        //     // TODO get a manager_id based on res.employeeManager:
-        //     employeeManager_id = 0;
+          //     // TODO get a manager_id based on res.employeeManager:
+          //     employeeManager_id = 0;
 
-        //     // TODO add a new employee to the employee-table to our db:
-        //     pool.query('INSERT INTO role(first_name, last_name, role_id, manager_id)values(res.employeeFirstName, res.employeeLastName, employeeRole_id, employeeManager_id)', 
-        //                 function (err, {rows}) {
-        //                   console.log(rows);
-        //                   pool.end();
-        //                 }
-        //     );
-          
-        //   });
+          //     // TODO add a new employee to the employee-table to our db:
+          //     pool.query('INSERT INTO role(first_name, last_name, role_id, manager_id)values(res.employeeFirstName, res.employeeLastName, employeeRole_id, employeeManager_id)', 
+          //                 function (err, {rows}) {
+          //                   console.log(rows);
+          //                   pool.end();
+          //                 }
+          //     );
 
+          //   });
+          init();
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "update an employee role") {
 
           console.log(`code for "update an employee role" is comming soon. It is under developing now.`);
-          console.log(`To do other choice you need to restart the App. Please, click 'ctrl+C' for GitBush.`);
 
           // pool.query('SELECT * FROM role', 
           //             function (err, {rows}) {
@@ -320,20 +331,23 @@ function init() {
           //               console.log(rows);
           //             }
           // );
+          init();
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "Quit the App") {
-          console.log(`Have a good rest of your day!`)
+          console.log(`Have a good rest of your day!`);
+          console.log('Run "node server.js" to start this App again.')
+          pool.end();
           process.exit();
         };
 
-      // end of function TODO();    
+        // end of function TODO();    
       };
 
     });
 
-// end of function init();
+  // end of function init();
 };
 
 init();

@@ -2,10 +2,12 @@
 a command-line application to manage a company's employee database, using Node.js, Inquirer, and PostgreSQL.
 
 ## Description
-### Motivation to create this App  was a wish to have a simple Employee-Tracker to oparate most important data related to employees, for easy managment.
+### Motivation to create this command-line App was an idea to create an App that gives an easy access to database data and provides an options to manipulate this data.
 ### I built this App because it had some new coding challanges needed to be solved. For me, as for a begginer, it was importent to get a new skills and got understanding that "I can do it!".
-### This App hepls a manager to operate an important employee data using basic tools (using CommandLine/GitBush/Terminal without WebPages and a lot other Apps), so you can run this app on almost any PC.
-### This project was interesting and usefull for me because, as a begginer, I learned how to create a FullStuck App using minimum tools.
+### This App hepls a manager to operate an important employee data using basic tools (using CommandLine/GitBush/Terminal without WebPages and a lot other Apps), so it can run on almost any PC.
+### This project was interesting and usefull for me because, as a begginer, I learned:
+- how to create a FullStuck App using minimum tools;
+- how to built responsive, user-friendly App without a browser FrontEnd.
 
 ## Table of Contents
 
@@ -17,7 +19,11 @@ a command-line application to manage a company's employee database, using Node.j
 - [Questions](#questions)
 
 ## Installation
-### To use this App you need to install NodeJS on your PC, copy this repo with a code, then use a Command Line to run this App. 
+### To use this App you need:
+1. install NodeJS;
+2. installn PostgreSQL;
+3. copy this repo with a code;
+4. use a Command Line to run this App. 
 
 ## Usage
 1. in the Command Line/GitBush/Terminal go to the folder with the code;
