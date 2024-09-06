@@ -22,6 +22,16 @@ const pool = new Pool(
 //connect to db
 pool.connect();
 
+// pool.query('ALTER TABLE employee ADD Manager _First_Name VARCHAR(30) NOT NULL',
+//   function (err, { rows }) {
+
+// });
+
+// pool.query('ALTER TABLE employee ADD Manager _Last_Name VARCHAR(30) NOT NULL',
+//   function (err, { rows }) {
+    
+// });
+
 console.log(`.-----------------------------------------------------.`);
 console.log(`|    _____                 _                          |`);
 console.log(`|   | ____|_ __ ___  _ __ | | ___  _   _  ___  ___    |`);
@@ -37,16 +47,17 @@ console.log(`|   |_|  |_| __,_|_| |_| __,_| ___,| ___|_|           |`);
 console.log(`|                             |___/                   |`);
 console.log(`.-----------------------------------------------------.`);
 
-
 function init() {
-  console.log('====================================================')
+  console.log('======================================================');
+  console.log('=                 Employee    Tracker                =');
+  console.log('======================================================');
   inquirer
     .prompt([
       {
         type: "list",
         message: "Choose what you would like to do:",
         name: "TODO",
-        choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "Quit the App"],
+        choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "view employee&manager", "Quit the App"],
       }
     ])
     .then((res) => {
@@ -109,7 +120,8 @@ function init() {
             function (err, { rows }) {
 
               //console.log(rows);
-              console.log(`Information about ALL ROLES:`);
+              // console.log(`${rows[i].id}`);
+              console.log(`Information about Managers:`);
               console.table(rows);
               init();
 
@@ -120,8 +132,8 @@ function init() {
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "view all employees") {
 
-          //pool.query('SELECT * FROM employee',
-          pool.query('SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Jobe_Title, department.name AS Department, role.salary AS Salary, employee.manager_id AS Manager_ID FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id',
+          // pool.query('SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Jobe_Title, department.name AS Department, role.salary AS Salary, employee.manager_id AS Manager_ID FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id',
+          pool.query('SELECT  e.id AS Employee_ID, e.first_name AS first_name, e.last_name AS last_name,  role.title AS Jobe_Title, department.name AS Department, role.salary AS Salary, m.first_name AS manager_first_name, m.last_name AS manager_last_name FROM  employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON role.department_id = department.id',
             function (err, { rows }) {
               console.log(`Information about ALL EMPLOYEES:`);
               console.table(rows);
@@ -129,6 +141,20 @@ function init() {
             }
           );
         };
+
+        // //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW   DELETE THIS OPTION FROM QUESTIONARY!!!!!!!!!!!!
+        // if (data === "view employee&manager") {
+          
+        // // source of code: chat GPT
+        // // pool.query('SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, employee.first_name AS First_Name, employee.last_name AS Last_Name FROM employee LEFT JOIN ??<employee>?? ON employee.manager_id = employee.id',
+        // pool.query('SELECT e.first_name AS employee_first_name, e.last_name AS employee_last_name, m.first_name AS manager_first_name, m.last_name AS manager_last_name FROM  employee e LEFT JOIN employee m ON e.manager_id = m.id;',
+        //     function (err, { rows }) {
+        //       console.log(`Information about ALL EMPLOYEES:`);
+        //       console.table(rows);
+        //       init();
+        //     }
+        //   );
+        // };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add a department") {
@@ -147,7 +173,6 @@ function init() {
               pool.query('INSERT INTO department (name) VALUES ($1)', [res.departmentName],
                 function (err, { rows }) {
                   viewAllDep();
-                  console.log('HI!');
                 }
               );
             });
@@ -166,11 +191,11 @@ function init() {
 
               // console.log(`${rows[i].id}`);
 
-              console.log(`Information about ALL DEPARTMENTS:`);
-              console.table(rows);
+              // console.log(`Information about ALL DEPARTMENTS you need to add a New Role:`);
+              // console.table(rows);
 
               options = rows;
-              console.log(options);
+              //console.log(options);
               inquirer
                 .prompt([
                   {
@@ -189,9 +214,6 @@ function init() {
                     name: 'roleDepartment',
                     message: 'What is the department name?',
                     choices: options.map(({department_name}) => department_name),
-                    // filter(val) {
-                    //   return val.toLowerCase();
-                    // },
                   }
                 ])
                 .then((res) => {
@@ -200,7 +222,7 @@ function init() {
                   console.log(`A new Role Salary is ${res.roleSalary}`);
                   console.log(`A new Role Department is ${res.roleDepartment}`);
                   const id = options.filter(({department_name}) => department_name === res.roleDepartment).department_id;
-                  // add a new role to the role-table to our db:
+                  // add a new role to the role-table to the db:
                   pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [res.roleTitle, res.roleSalary, id],
                     //function (err, {rows}) {
                     function (err, data) {
@@ -212,47 +234,7 @@ function init() {
 
                 });
             });
-
-          // inquirer
-          // .prompt([
-          //   {
-          //     type: "input",
-          //     name: "roleTitle",
-          //     message: "What is the title of a role?",
-          //   },
-          //   {
-          //     type: "input",
-          //     name: "roleSalary",
-          //     message: "What is the salary for the role?",
-          //   },
-
-          //   {
-          //     type: 'list',
-          //     name: 'roleDepartment',
-          //     message: 'What is the department name?',
-          //     choices: [],
-          //     // filter(val) {
-          //     //   return val.toLowerCase();
-          //     // },
-          //   }
-          // ])
-          // .then((res) =>{
-
-          //   console.log(`A new Role is ${res.roleTitle}`);
-          //   console.log(`A new Role Salary is ${res.roleSalary}`);
-          //   console.log(`A new Role Department is ${res.roleDepartment}`);
-
-          //   // add a new role to the role-table to our db:
-          //   pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)',  [res.roleTitle, res.roleSalary, res.roleDepartment_id], 
-          //               //function (err, {rows}) {
-          //               function (err, data) {
-          //                 //console.table(rows);
-          //                 console.log('A new role has been added! Check "view all roles!"');
-          //                 init();
-          //               }
-          //   );
-
-          // });
+          
         };
 
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
@@ -337,7 +319,10 @@ function init() {
         //WWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "Quit the App") {
           console.log(`Have a good rest of your day!`);
-          console.log('Run "node server.js" to start this App again.')
+          console.log('Run "node server.js" to start this App again.');
+          console.log('======================================================');
+          console.log('=        Employee    Tracker   is   closed           =');
+          console.log('======================================================');
           pool.end();
           process.exit();
         };
