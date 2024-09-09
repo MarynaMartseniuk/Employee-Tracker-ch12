@@ -213,17 +213,24 @@ function init() {
                     type: 'list',
                     name: 'roleDepartment',
                     message: 'What is the department name?',
-                    choices: options.map(({department_name}) => department_name),
+                    //choices: options.map(({department_name}) => department_name),
+                    choices: options.map((option) => {return {name: option.department_name, value: option.department_id}}),
                   }
                 ])
                 .then((res) => {
 
-                  console.log(`A new Role is ${res.roleTitle}`);
-                  console.log(`A new Role Salary is ${res.roleSalary}`);
-                  console.log(`A new Role Department is ${res.roleDepartment}`);
-                  const id = options.filter(({department_name}) => department_name === res.roleDepartment).department_id;
+                  // console.log(`A new Role is ${res.roleTitle}`);
+                  // console.log(`A new Role Salary is ${res.roleSalary}`);
+                  // console.log(`A new Role Department is ${res.roleDepartment}`);
+
+                  // const id = options.filter(({department_name}) => {
+                  //   if (department_name === res.roleDepartment) {
+                  //     return department_id; 
+                  //   }
+                  // });
+
                   // add a new role to the role-table to the db:
-                  pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [res.roleTitle, res.roleSalary, id],
+                  pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [res.roleTitle, res.roleSalary, res.roleDepartment],
                     //function (err, {rows}) {
                     function (err, data) {
                       //console.table(rows);
@@ -240,8 +247,64 @@ function init() {
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "add an employee") {
 
-          console.log(`code for "add a employee" is comming soon. It is under developing now.`);
+          // console.log(`code for "add a employee" is comming soon. It is under developing now.`);
+          
+          //===================================START ONE================================
+          var options = 0;
 
+          pool.query('SELECT role_title AS employee_role, role.id AS role_id FROM role',
+            function (err, { rows }) {
+
+              // console.log(`${rows[i].id}`);
+
+              // console.log(`Information about ALL DEPARTMENTS you need to add a New Role:`);
+              // console.table(rows);
+
+              options = rows;
+              //console.log(options);
+              inquirer
+                .prompt([
+                  {
+                    type: "input",
+                    name: "employeeFirstName",
+                    message: "What is the First Name of a new employee?",
+                  },
+                  {
+                    type: "input",
+                    name: "employeeLastName",
+                    message: "What is the Last Name of a new employee?",
+                  },
+
+                  {
+                    type: 'list',
+                    name: 'employeeRole',
+                    message: 'Choose the role?',
+                    choices: options.map(({employee_role}) => employee_role),
+                  }
+                ])
+                .then((res) => {
+
+                  console.log(`A new Role is ${res.roleTitle}`);
+                  console.log(`A new Role Salary is ${res.roleSalary}`);
+                  console.log(`A new Role Department is ${res.employee_role}`);
+                  const id = options.filter(({employee_role}) => employee_role === res.employee_role).role_id;
+                  // add a new employee to the employee to the db:
+                  // pool.query('INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)', [res.roleTitle, res.roleSalary, id],
+                  //   //function (err, {rows}) {
+                  //   function (err, data) {
+                  //     //console.table(rows);
+                  //     console.log('A new role has been added! Check "view all roles!"');
+                  //     init();
+                  //   }
+                  // );
+
+                });
+            });
+            //==============================END ONE===============================
+
+
+
+          //=============================START TWO================================
           //   // 1. TODO display Role Titles so user can choose one:
 
           //   // 2. TODO display Manager first&last names  so user can choose one:
@@ -299,6 +362,8 @@ function init() {
           //     );
 
           //   });
+          //==============================END TWO===================================
+
           init();
         };
 
