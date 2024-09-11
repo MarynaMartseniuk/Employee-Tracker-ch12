@@ -357,10 +357,13 @@ function init() {
         //WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         if (data === "update an employee role") {
 
-          //var options = 0;
+          var options = 0;
+          var allRoles = 0;
 
+          //Step1 => Choose an employee from the all employees you want to update a role for. Then data (Employee ID, FirstName, Last Name, current Role, current Role Id), that user have chosen will be stored in a var 'employeeToUpdate'.
 
           //pool.query('SELECT employee.id AS employee-id, employee.last_name AS employee-lastname, employee.first_name AS employee-firstname FROM employee',
+
           // pool.query('SELECT role.title AS role-title, role.id AS role-id, employee.id AS employee-id, employee.last_name AS employee-lastname, employee.first_name AS employee-firstname FROM employee LEFT JOIN role ON employee.role_id = role.id',
 
           pool.query('SELECT  e.id AS employee_id, e.first_name AS first_name, e.last_name AS last_name,  e.role_id AS jobe_id, role.title AS jobe_title, department.name AS department, role.salary AS salary, m.first_name AS manager_first_name, m.last_name AS manager_last_name FROM  employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON role.department_id = department.id',
@@ -374,6 +377,7 @@ function init() {
               console.log(options);
               inquirer
                 .prompt([
+
                   {
                     type: 'list',
                     name: 'employeeToUpdate',
@@ -388,6 +392,10 @@ function init() {
                 ])
                 .then((res) => {
 
+                  //Step2 => Choose a new role for the employee from all roles. An update role (role ID and role title), that user have chosen will be stored in a var 'updatedEmployeeRole'. 
+                  // user have an option do not make any changes and leave a default value
+
+                  console.log(res.employeeToUpdate);
                   console.log(`To update a role you have selected  ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}.`);
                   console.log(`Let's do a role uptade!`);
 
@@ -396,16 +404,16 @@ function init() {
                       // console.log(`${rows[i].role-title}`);
                       // console.table(rows);
         
-                      allRolesdata = rows;
-                      console.log(allRolesdata);
+                      allRoles = rows;
+                      console.log(allRoles);
                       inquirer
                         .prompt([
                           {
                             type: 'list',
                             name: 'updatedEmployeeRole',
                             message: `Choose a new role for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}}`,
-                            choices: options.map((option) => 
-                              {return {name: option.role-title, value: [option.role-id, option.role-title]}
+                            choices: allRoles.map((oneRole) => 
+                              {return {name: oneRole.role-title, value: [oneRole.role-id, oneRole.role-title]}
                               }),
                             default() {
                               return {
@@ -416,6 +424,8 @@ function init() {
                           }
                         ])
                         .then((updatedRes) => {
+
+                          //Step3 => update in the emplyee table a role colunm for the employee with the id user chose in step1 (employee id is stored in a "res.roleToUpdate[0]"). 
 
                           console.log(`Data for upcoming updates:`);
                           console.log(`1. the ID of the employee is ${res.roleToUpdate[0]}`);
@@ -445,6 +455,7 @@ function init() {
           console.log(`code for "update an role" is not fully done, it is under debugging. User input to update the role table is taken by the code correctly (as console.log shows on lines 517-521). But the database role table is not updaed with this new data.`);
 
           var options = 0;
+          var allDepartments = 0;
 
           // pool.query('SELECT department.name AS Department_name, department.id AS Department_ID FROM department',
           pool.query('SELECT role.title AS job_title, role.id AS role_id, department.name AS department, department.id AS departmentid, role.salary AS salary FROM role LEFT JOIN department ON role.department_id = department.id',
@@ -483,7 +494,7 @@ function init() {
                       // console.log(`Information about ALL DEPARTMENTS you need to add a New Role:`);
                       // console.table(rows);
         
-                      options = rows;
+                      allDepartments = rows;
                       //console.log(options);
                       inquirer
                         .prompt([
@@ -507,8 +518,8 @@ function init() {
                             type: 'list',
                             name: 'updatedRoleDepartment',
                             message: 'Choose a department for udated role:',
-                            choices: options.map((option) => 
-                              {return {name: option.department_name, value: option.department_id}
+                            choices: allDepartments.map((oneDepartment) => 
+                              {return {name: oneDepartment.department_name, value: oneDepartment.department_id}
                               }),
                           }
                         ])
