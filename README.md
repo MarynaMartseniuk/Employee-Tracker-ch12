@@ -33,7 +33,9 @@ a command-line application to manage a company's employee database, using Node.j
 5. by answering questions you will be able to  "view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "Quit the App".
 
 ### run the App will look like this:
-![run the App will look like this:]()
+![run the App will look like this:](https://github.com/MarynaMartseniuk/Employee-Tracker-ch12/blob/main/assests/images/1.jpg)
+![run the App will look like this:](https://github.com/MarynaMartseniuk/Employee-Tracker-ch12/blob/main/assests/images/2.jpg)
+![run the App will look like this:](https://github.com/MarynaMartseniuk/Employee-Tracker-ch12/blob/main/assests/images/3.jpg)
 
 
 ## Credits
