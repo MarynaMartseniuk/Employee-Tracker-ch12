@@ -399,8 +399,8 @@ function init() {
                   console.log(`To update a role you have selected  ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}.`);
                   console.log(`Let's do a role uptade!`);
 
-                  pool.query('SELECT role.id AS role-id, role.title AS role-title FROM role',
-                    function (err, { rows }) {
+                  pool.query('SELECT role.id AS role_id, role.title AS role_title FROM role',
+                    function (err,  { rows } ) {
                       // console.log(`${rows[i].role-title}`);
                       // console.table(rows);
         
@@ -413,7 +413,7 @@ function init() {
                             name: 'updatedEmployeeRole',
                             message: `Choose a new role for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}}`,
                             choices: allRoles.map((oneRole) => 
-                              {return {name: oneRole.role-title, value: [oneRole.role-id, oneRole.role-title]}
+                              {return {name: oneRole.role_title, value: [oneRole.role_id, oneRole.role_title]}
                               }),
                             default() {
                               return {
@@ -428,18 +428,18 @@ function init() {
                           //Step3 => update in the emplyee table a role colunm for the employee with the id user chose in step1 (employee id is stored in a "res.roleToUpdate[0]"). 
 
                           console.log(`Data for upcoming updates:`);
-                          console.log(`1. the ID of the employee is ${res.roleToUpdate[0]}`);
+                          console.log(`1. the ID of the employee is ${res.employeeToUpdate[0]}`);
                           console.log(`2. the Name of the employee is ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}`);
                           console.log(`3. a new role ID is ${updatedRes.updatedEmployeeRole[0]}`);
                           console.log(`4. a new role is ${updatedRes.updatedEmployeeRole[1]}`);
         
                           // add a new role to the role-table to the db:
-                          // pool.query('UPDATE role SET (title, salary, department_id) VALUES ($1, $2, $3) WHERE id = $4', [ updatedRes.updatedRoleTitle, updatedRes.updatedRoleSalary, updatedRes.roleDepartment, res.roleToUpdate[0]],
-                          pool.query(`UPDATE employee SET role_id = ${updatedRes.updatedEmployeeRole[1]} WHERE id = ${res.roleToUpdate[0]}`, 
+                           pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [ updatedRes.updatedEmployeeRole[0], res.employeeToUpdate[0]],
+                          //pool.query(`UPDATE employee SET role_id = ${updatedRes.updatedEmployeeRole[1]} WHERE id = ${res.employeeToUpdate[0]}`, 
                             //function (err, {rows}) {
                             function (err, data) {
                               //console.table(rows);
-                              console.log(`The ${res.employeeToUpdate[3]} for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}  has been updated to ${updatedRes.updatedEmployeeRole[1]}! Check "view all roles!"`);
+                              //console.log(`The ${res.employeeToUpdate[3]} for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}  has been updated to ${updatedRes.updatedEmployeeRole[1]}! Check "view all roles!"`);
                               init();
                             }
                           );
