@@ -237,8 +237,7 @@ function init() {
             function (err, { rows }) {
 
               options = rows;
-              console.log(options);
-              inquirer
+               inquirer
                 .prompt([
 
                   {
@@ -258,7 +257,6 @@ function init() {
                   //Step2 => Choose a new role for the employee from all roles. An update role (role ID and role title), that user have chosen will be stored in a var 'updatedEmployeeRole'. 
                   // user have an option do not make any changes and leave a default value
 
-                  console.log(res.employeeToUpdate);
                   console.log(`To update a role you have selected  ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}.`);
                   console.log(`Let's do a role uptade!`);
 
@@ -266,7 +264,6 @@ function init() {
                     function (err,  { rows } ) {
         
                       allRoles = rows;
-                      console.log(allRoles);
                       inquirer
                         .prompt([
                           {
@@ -287,12 +284,6 @@ function init() {
                         .then((updatedRes) => {
 
                           //Step3 => update in the emplyee table a role colunm for the employee with the id user chose in step1 (employee id is stored in a "res.roleToUpdate[0]"). 
-
-                          console.log(`Data for upcoming updates:`);
-                          console.log(`1. the ID of the employee is ${res.employeeToUpdate[0]}`);
-                          console.log(`2. the Name of the employee is ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}`);
-                          console.log(`3. a new role ID is ${updatedRes.updatedEmployeeRole[0]}`);
-                          console.log(`4. a new role is ${updatedRes.updatedEmployeeRole[1]}`);
         
                           // add a new role to the role-table to the db:
                            pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [ updatedRes.updatedEmployeeRole[0], res.employeeToUpdate[0]],
