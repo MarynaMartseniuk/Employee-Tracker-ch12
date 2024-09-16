@@ -228,14 +228,14 @@ function init() {
             function (err,  {rows} ) {
               
                   let managerData =  rows;
-                  console.log(managerData);
+                  // console.log(managerData);
                   
                   pool.query('SELECT  role.id AS role_id, role.title AS Jobe_Title FROM role',
                     function (err, { rows }) {
         
-                            console.log(` second: ${managerData}`);
+                            // console.log(` second: ${managerData}`);
                             let options = rows;
-                            console.log(options);
+                            // console.log(options);
                             
                             inquirer
                               .prompt([
@@ -439,7 +439,7 @@ function init() {
                             //function (err, {rows}) {
                             function (err, data) {
                               //console.table(rows);
-                              //console.log(`The ${res.employeeToUpdate[3]} for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}  has been updated to ${updatedRes.updatedEmployeeRole[1]}! Check "view all roles!"`);
+                              console.log(`The ${res.employeeToUpdate[3]} role for ${res.employeeToUpdate[2]} ${res.employeeToUpdate[1]}  has been updated to ${updatedRes.updatedEmployeeRole[1]} role! Check "view all employees!"`);
                               init();
                             }
                           );
